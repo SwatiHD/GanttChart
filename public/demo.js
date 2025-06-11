@@ -1,5 +1,35 @@
-import Gantt from '../src/js/index.js';
+import Gantt from '../src/index.js';
 
+
+// Utility functions that were missing
+function daysSince(days) {
+    const date = new Date();
+    date.setDate(date.getDate() + days);
+    return date.toISOString().split('T')[0]; // Return YYYY-MM-DD format
+}
+
+function random() {
+    return Math.random() * 100; // Random percentage
+}
+
+function createSwitch(formId, switchId, config) {
+    const form = document.getElementById(formId);
+    if (!form) return;
+
+    const label = Array.isArray(config) ? config[0] : config;
+    const defaultValue = Array.isArray(config) ? config[1] : false;
+
+    const container = document.createElement('div');
+    container.innerHTML = `
+        <label>
+            <input type="checkbox" id="${switchId}" ${defaultValue ? 'checked' : ''}>
+            ${label}
+        </label>
+    `;
+    form.appendChild(container);
+}
+
+////////////
 const tasks = [
     {
         start: daysSince(-7),
@@ -128,30 +158,30 @@ const tasksBlank = [
     },
 ];
 
-const HOLIDAYS = [
-    { name: 'New Years Day', date: '2025-01-01' },
-    { name: 'Republic Day', date: '2025-01-26' },
-    { name: 'Maha Shivratri', date: '2025-02-23' },
-    { name: 'Holi', date: '2025-03-11' },
-    { name: 'Mahavir Jayanthi', date: '2025-04-07' },
-    { name: 'Good Friday', date: '2025-04-10' },
-    { name: 'May Day', date: '2025-05-01' },
-    { name: 'Buddha Purnima', date: '2025-05-08' },
-    { name: 'Krishna Janmastami', date: '2025-08-14' },
-    { name: 'Independence Day', date: '2025-08-15' },
-    { name: 'Ganesh Chaturthi', date: '2025-08-23' },
-    { name: 'Id-Ul-Fitr', date: '2025-09-21' },
-    { name: 'Vijaya Dashami', date: '2025-09-28' },
-    { name: 'Mahatma Gandhi Jayanti', date: '2025-10-02' },
-    { name: 'Diwali', date: '2025-10-17' },
-    { name: 'Guru Nanak Jayanthi', date: '2025-11-02' },
-    { name: 'Christmas', date: '2025-12-25' },
-];
+// const HOLIDAYS = [
+//     { name: 'New Years Day', date: '2025-01-01' },
+//     { name: 'Republic Day', date: '2025-01-26' },
+//     { name: 'Maha Shivratri', date: '2025-02-23' },
+//     { name: 'Holi', date: '2025-03-11' },
+//     { name: 'Mahavir Jayanthi', date: '2025-04-07' },
+//     { name: 'Good Friday', date: '2025-04-10' },
+//     { name: 'May Day', date: '2025-05-01' },
+//     { name: 'Buddha Purnima', date: '2025-05-08' },
+//     { name: 'Krishna Janmastami', date: '2025-08-14' },
+//     { name: 'Independence Day', date: '2025-08-15' },
+//     { name: 'Ganesh Chaturthi', date: '2025-08-23' },
+//     { name: 'Id-Ul-Fitr', date: '2025-09-21' },
+//     { name: 'Vijaya Dashami', date: '2025-09-28' },
+//     { name: 'Mahatma Gandhi Jayanti', date: '2025-10-02' },
+//     { name: 'Diwali', date: '2025-10-17' },
+//     { name: 'Guru Nanak Jayanthi', date: '2025-11-02' },
+//     { name: 'Christmas', date: '2025-12-25' },
+// ];
 
-new Gantt('#central-demo', tasks, {
-    scroll_to: daysSince(-7),
-    infinite_padding: false,
-});
+// new Gantt('#central-demo', tasks, {
+//     scroll_to: daysSince(-7),
+//     infinite_padding: false,
+// });
 
 const sideheader = new Gantt('#sideheader', tasksSmall, {
     scroll_to: daysSince(-20),
@@ -159,46 +189,106 @@ const sideheader = new Gantt('#sideheader', tasksSmall, {
     infinite_padding: false,
 });
 
-const popup = new Gantt('#popup', tasksBlank, {
-    scroll_to: daysSince(-7),
-    infinite_padding: false,
-    container_height: 350,
-    popup: (ctx) => {
-        ctx.set_title(ctx.task.name);
-        let title = ctx.get_title();
-        title.style.border = '0.5px solid black';
-        title.style.borderRadius = '1.5px';
-        title.style.padding = '3px 5px ';
-        title.style.backgroundColor = 'black';
-        title.style.opacity = '0.85';
-        title.style.color = 'white';
-        title.style.width = 'fit-content';
-        title.onclick = () => {
-            let ans = prompt('New Title: ');
-            if (ans) ctx.set_title(ans);
-        };
-        if (ctx.task.description) ctx.set_subtitle(ctx.task.description);
-        else ctx.set_subtitle('');
+// const popup = new Gantt('#popup', tasksBlank, {
+//     scroll_to: daysSince(-7),
+//     infinite_padding: false,
+//     container_height: 350,
+//     popup: (ctx) => {
+//         ctx.set_title(ctx.task.name);
+//         let title = ctx.get_title();
+//         title.style.border = '0.5px solid black';
+//         title.style.borderRadius = '1.5px';
+//         title.style.padding = '3px 5px ';
+//         title.style.backgroundColor = 'black';
+//         title.style.opacity = '0.85';
+//         title.style.color = 'white';
+//         title.style.width = 'fit-content';
+//         title.onclick = () => {
+//             let ans = prompt('New Title: ');
+//             if (ans) ctx.set_title(ans);
+//         };
+//         if (ctx.task.description) ctx.set_subtitle(ctx.task.description);
+//         else ctx.set_subtitle('');
 
-        ctx.set_details(
-            `<em>Duration</em>: ${ctx.task.actual_duration} days<br/><em>Dates</em>: ${ctx.task._start.toLocaleDateString('en-US')} - ${ctx.task._end.toLocaleDateString('en-US')}`,
-        );
-        let details = ctx.get_details();
-        details.style.lineHeight = '1.75';
-        details.style.margin = '10px 4px';
-        if (!ctx.chart.options.readonly) {
-            if (!ctx.chart.options.readonly_progress) {
-                ctx.add_action('Set Color', (task, chart) => {
-                    const bar = chart.bars.find(
-                        ({ task: t }) => t.id === task.id,
-                    ).$bar;
-                    bar.style.fill = `hsla(${~~(360 * Math.random())}, 70%,  72%, 0.8)`;
-                });
-            }
-        }
-    },
-});
+//         ctx.set_details(
+//             `<em>Duration</em>: ${ctx.task.actual_duration} days<br/><em>Dates</em>: ${ctx.task._start.toLocaleDateString('en-US')} - ${ctx.task._end.toLocaleDateString('en-US')}`,
+//         );
+//         let details = ctx.get_details();
+//         details.style.lineHeight = '1.75';
+//         details.style.margin = '10px 4px';
+//         if (!ctx.chart.options.readonly) {
+//             if (!ctx.chart.options.readonly_progress) {
+//                 ctx.add_action('Set Color', (task, chart) => {
+//                     const bar = chart.bars.find(
+//                         ({ task: t }) => t.id === task.id,
+//                     ).$bar;
+//                     bar.style.fill = `hsla(${~~(360 * Math.random())}, 70%,  72%, 0.8)`;
+//                 });
+//             }
+//         }
+//     },
+// });
 //-----new code
+
+
+
+// Update chart function
+// Function to safely bind an input element if it exists
+
+
+// Create chart and advanced gantt charts with null checks
+const chartEl = document.querySelector('#chart');
+let chart;
+if (chartEl) {
+    chart = new Gantt('#chart', tasks, {
+        view_mode: "Month",
+        language: "en",
+        today_button: true,
+        view_mode_select: true,
+        popup_on: "click",
+    });
+}
+
+
+// === Snap Controls ===
+
+// Example usage for your onchange event
+function handleChartUpdate() {
+    // Updated tasks
+    const updatedTasks = [
+        {
+            id: 'task1',
+            name: 'Updated Task 1',
+            start: '2024-01-01',
+            end: '2024-01-12',
+            progress: 75
+        },
+        {
+            id: 'task2',
+            name: 'Updated Task 2',
+            start: '2024-01-08',
+            end: '2024-01-20',
+            progress: 40
+        }
+    ];
+
+    updateChart(updatedTasks);
+}
+
+// Initialize chart when DOM is ready
+document.addEventListener('DOMContentLoaded', function () {
+    initializeChart();
+
+    // Example: Add event listener for updates
+    const updateButton = document.querySelector('#update-chart');
+    if (updateButton) {
+        updateButton.addEventListener('click', handleChartUpdate);
+    }
+});
+
+
+
+
 const advancedEl = document.querySelector('#advanced');
 let advanced;
 if (advancedEl) {
@@ -222,7 +312,7 @@ safeBindInput('snap-at-qty', 'input', (e) => {
     if (advanced) {
         const scaleEl = document.getElementById('snap-at-scale');
         const scale = scaleEl ? scaleEl.value : 'd';
-        advanced.update_options({ snap_at: e.target.value + scale });
+        advanced.update({ snap_at: e.target.value + scale });
     }
 });
 
@@ -230,14 +320,14 @@ safeBindInput('snap-at-scale', 'change', (e) => {
     if (advanced) {
         const qtyEl = document.getElementById('snap-at-qty');
         const qty = qtyEl ? qtyEl.value : '1';
-        advanced.update_options({ snap_at: qty + e.target.value });
+        advanced.update({ snap_at: qty + e.target.value });
     }
 });
 
 // === Auto-Move Label Toggle ===
 safeBindInput('auto-move-label', 'change', (e) => {
     if (advanced) {
-        advanced.update_options({ auto_move_label: e.target.checked });
+        advanced.update({ auto_move_label: e.target.checked });
     }
 });
 
@@ -253,12 +343,13 @@ safeBindInput('auto-move-label', 'change', (e) => {
 //     scroll_to: daysSince(-7),
 // });
 const gantt = new Gantt("#gantt", tasks, {
-  view_mode: "Day", // Can be Day, Week, Month, etc.
-  language: "en",
-  today_button: true,
-  view_mode_select: true,
-  popup_on: "click",
+    view_mode: "Day", // Can be Day, Week, Month, etc.
+    language: "en",
+    today_button: true,
+    view_mode_select: true,
+    popup_on: "click",
 });
+
 
 SWITCHES = {
     'sideheader-form': {
@@ -334,7 +425,7 @@ const UPDATES = [
 //     ],
 // ];
 
-for (let [chart, details, after] of UPDATES) {
+for (let [ganttInstance, details, after] of UPDATES) {
     for (let id in details) {
         let el = document.getElementById(id);
 
@@ -365,14 +456,14 @@ for (let [chart, details, after] of UPDATES) {
             }
 
             if (typeof label === 'function') {
-                console.log('ha', label(val, chart.options));
-                chart.update_options(label(val, chart.options));
+                console.log('ha', label(val, ganttInstance.options));
+                ganttInstance.update(label(val, ganttInstance.options));
             } else {
-                chart.update_options({
+                ganttInstance.update({
                     [label]: val,
                 });
             }
-            after && after(id, val, chart);
+            after && after(id, val, ganttInstance);
         };
     }
 }

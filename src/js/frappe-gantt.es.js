@@ -868,7 +868,7 @@ class B {
     } else
       this.config.ignored_function = this.options.ignore;
   }
-  update_options(t) {
+  update(t) {
     this.setup_options({ ...this.original_options, ...t }), this.change_view_mode(void 0, !0);
   }
   setup_tasks(t) {

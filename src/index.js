@@ -114,7 +114,7 @@ export default class Gantt {
         }
     }
 
-    update_options(options) {
+    update(options) {
         this.setup_options({ ...this.original_options, ...options });
         this.change_view_mode(undefined, true);
     }
