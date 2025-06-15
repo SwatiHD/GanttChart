@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function () {
         updateButton.addEventListener('click', handleChartUpdate);
     }
 });
-// hello
+// hello msg
 
 
 
